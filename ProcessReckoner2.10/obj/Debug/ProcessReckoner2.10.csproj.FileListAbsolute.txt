@@ -1,0 +1,71 @@
+D:\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe.config
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.exe
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.pdb
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Edit.resources
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Reckoner.resources
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Form2.resources
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.image.resources
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.NewTicket.resources
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Properties.Resources.resources
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csproj.GenerateResource.Cache
+D:\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe
+D:\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.pdb
+D:\reck- complete\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csprojResolveAssemblyReference.cache
+D:\Backup\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe.config
+D:\Backup\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.exe
+D:\Backup\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.pdb
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe.config
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.exe
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.pdb
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.pdb
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csprojResolveAssemblyReference.cache
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Edit.resources
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Reckoner.resources
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Form2.resources
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.image.resources
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.NewTicket.resources
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Properties.Resources.resources
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csproj.GenerateResource.Cache
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe.config
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.exe
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.pdb
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.pdb
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csprojResolveAssemblyReference.cache
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Edit.resources
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Reckoner.resources
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Form2.resources
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.image.resources
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.NewTicket.resources
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Properties.Resources.resources
+D:\Gajendra\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csproj.GenerateResource.Cache
+C:\Users\gajendrac\Documents\Visual Studio 2012\Projects\Reck-Complete\reck- complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.AddNewPeoject.resources
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe.config
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.exe
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.pdb
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\bin\Debug\Reckoner_App.pdb
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csprojResolveAssemblyReference.cache
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.AddNewPeoject.resources
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Edit.resources
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Reckoner.resources
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Form2.resources
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.image.resources
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.NewTicket.resources
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\Reckoner_App.Properties.Resources.resources
+D:\GSChauhan_Codebase\Reck-Complete\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csproj.GenerateResource.Cache
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe.config
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\Reckoner_App.exe
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\Reckoner_App.pdb
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csprojResolveAssemblyReference.cache
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\Reckoner_App.AddNewPeoject.resources
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\Reckoner_App.Edit.resources
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\Reckoner_App.Reckoner.resources
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\Reckoner_App.Form2.resources
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\Reckoner_App.image.resources
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\Reckoner_App.NewTicket.resources
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\Reckoner_App.Properties.Resources.resources
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\obj\Debug\ProcessReckoner2.10.csproj.GenerateResource.Cache
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\bin\Debug\Reckoner_App.exe
+D:\GSChauhan_Codebase\ProcessReckoner\ProcessReckoner2.10\bin\Debug\Reckoner_App.pdb

@@ -1,0 +1,39 @@
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\bin\Debug\Reckoner_App.exe
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\bin\Debug\Reckoner_App.pdb
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.csprojResolveAssemblyReference.cache
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Properties.Resources.resources
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.csproj.GenerateResource.Cache
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.exe
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.pdb
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Edit.resources
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\bin\Debug\Reckoner_App.exe.config
+c:\users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Reckoner.resources
+C:\Users\rakeshn\documents\visual studio 2012\Projects\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.NewTicket.resources
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\bin\Debug\Reckoner_App.exe.config
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.exe
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.pdb
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\bin\Debug\Reckoner_App.exe
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\bin\Debug\Reckoner_App.pdb
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.csprojResolveAssemblyReference.cache
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Edit.resources
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Reckoner.resources
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.NewTicket.resources
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Properties.Resources.resources
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.csproj.GenerateResource.Cache
+C:\Users\Rajesh\Desktop\prj\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Form2.resources
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\bin\Debug\Reckoner_App.exe.config
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.exe
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.pdb
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\bin\Debug\Reckoner_App.exe
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\bin\Debug\Reckoner_App.pdb
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.csprojResolveAssemblyReference.cache
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Edit.resources
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Reckoner.resources
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Form2.resources
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.NewTicket.resources
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.Properties.Resources.resources
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.csproj.GenerateResource.Cache
+C:\Reckoner_App\Reckoner_App\Reckoner_App\Reckoner_App\obj\Debug\Reckoner_App.image.resources
+D:\reck- complete\Reckoner_App\bin\Debug\Reckoner_App.exe.config
+D:\reck- complete\Reckoner_App\obj\Debug\Reckoner_App.exe
+D:\reck- complete\Reckoner_App\obj\Debug\Reckoner_App.pdb

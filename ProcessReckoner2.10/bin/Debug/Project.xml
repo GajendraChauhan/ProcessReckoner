@@ -1,0 +1,725 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Datas>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>13</ModuleId>
+    <ModuleName>Service Order reports</ModuleName>
+    <TicketTypeID>1</TicketTypeID>
+    <TicketType>Service order creation details report</TicketType>
+    <Business>I need a report that gives the source of case creation for facility Tax ID: 86-0100882.  I need to know what provider(physician) and contact is starting the case.  I also need to know, separately, what cases are started by a contact at the facility in question.  Can we also separate this out by phone and web initiaion?  </Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>SELECT  hdr.MSI_FAC_TAX_ID
+      ,hdr.MSI_REF_MD_TAX_ID
+      ,sohdr.ORDER_TYPE
+      ,hdr.SO_ID
+      ,mdname.BO_NAME_UPPER ReferringProvider
+      ,RTRIM(cntname.BO_NAME_UPPER) OriginalContactName
+      ,CASE  WHEN hdr.MSI_SO_CNTCT_TYPE2 = 1 THEN 'Req MD Contact'
+      WHEN hdr.MSI_SO_CNTCT_TYPE2 = 2 THEN 'Requesting MD'
+      WHEN hdr.MSI_SO_CNTCT_TYPE2 = 3 THEN 'Member'
+      WHEN hdr.MSI_SO_CNTCT_TYPE2 = 4 THEN 'Member Representative'
+      WHEN hdr.MSI_SO_CNTCT_TYPE2 = 5 THEN 'Facility'
+      ELSE 'Other'
+      END AS OriginalContactType
+      ,RTRIM(hdr.MSI_SO_CNTCT_PHN2) OriginalContactPhoneNum
+      ,sohdr.SO_DATE
+      FROM
+      CRPROD.dbo.PS_MSI_RF_SO_HDR hdr (NOLOCK)
+      JOIN CRPROD.dbo.PS_CM addr ON hdr.MSI_REF_MD_CM_ID = addr.CM_ID
+      JOIN CRPROD.dbo.PS_BO_NAME mdname (NOLOCK)
+      ON hdr.MSI_REF_MD_BO_ID = mdname.BO_ID AND mdname.PRIMARY_IND = 'Y'
+      JOIN CRPROD.dbo.PS_BO_NAME cntname (NOLOCK)
+      ON hdr.MSI_SOCNTCT2_BO_ID = cntname.BO_ID AND cntname.PRIMARY_IND = 'Y'
+      JOIN CRPROD.dbo.PS_RF_SO_HDR sohdr (NOLOCK)
+      ON hdr.SO_ID = sohdr.SO_ID
+      WHERE hdr.MSI_FAC_TAX_ID = @FacilityTaxId
+      AND  sohdr.SO_DATE BETWEEN @StartDate AND @EndDate
+    </Approach>
+    <Steps>Step 1:        Identify the cases created for the particular facility tax ID                                                                Step 2:        Extract the data for given period of startdate and enddate                                                                Step 3:        Identify the source of case creation based on the column MSI_SO_CNTCT_TYPE2 in CRPROD.dbo.PS_MSI_RF_SO_HDR table                                                                Step 4:        Here are the conditions to identify the source of the case creation
+      hdr.MSI_SO_CNTCT_TYPE2 = 1 THEN 'Req MD Contact'
+      hdr.MSI_SO_CNTCT_TYPE2 = 2 THEN 'Requesting MD'
+      hdr.MSI_SO_CNTCT_TYPE2 = 3 THEN 'Member'
+      hdr.MSI_SO_CNTCT_TYPE2 = 4 THEN 'Member Representative'
+      hdr.MSI_SO_CNTCT_TYPE2 = 5 THEN 'Facility'
+      ELSE 'Other'
+            </Steps>
+    <Reference>195536</Reference>
+    <LastUpdate>13-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>verify the query conditions for the source of the case creations.
+      Check the facility Tax ID is correct or not.
+      Check the time period.
+    </Review>
+    <Testing>Verify the report link wether it is working or not.
+      Verify the report to see any data error are there.</Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>13</ModuleId>
+    <ModuleName>Service Order reports</ModuleName>
+    <TicketTypeID>2</TicketTypeID>
+    <TicketType>Denial report</TicketType>
+    <Business> Need to make it so we can run this report for full denial rationale description. In our meeting today you stated you would create something in report manager. You advised I will be able to provide the report to the client by Monday 3/24/2014 at the latest</Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>WITH CTE (InsurerName,RationaleCode,RationaleLongDesc,initialDenials)
+      AS (SELECT DISTINCT InsurerName,RationaleCode
+      ,RationaleLongDesc,
+      ISNULL(SUM(CASE WHEN PriorAuthTypeCode IN ( '2','40','7' ) AND sopf.ServiceOrderStatusKey=2
+      THEN sopf.ProcedureQty
+      ELSE 0
+      END), 0) AS initialDenials
+      FROM dbo.programdim p
+      JOIN dbo.ServiceOrderProcedureFact sopf ON sopf.ProgramKey=p.ProgramKey
+      JOIN dbo.RationaleDim r ON sopf.RationaleKey=r.RationaleKey
+      JOIN dbo.ServiceOrderMedicalStatusDim som ON sopf.ServiceOrderMedicalStatusKey=som.ServiceOrderMedicalStatusKey
+      JOIN dbo.ProcedureDim up ON up.ProcedureKey=sopf.ProcedureKey
+      JOIN dbo.DateDim d ON d.DateKey=sopf.ServiceOrderDateKey
+      WHERE p.InsurerName = @InsurerName
+      AND CONVERT(VARCHAR(10),ServiceorderDateKey,110) between @startDate and @endDate
+      GROUP BY RationaleCode,RationaleLongDesc,InsurerName
+      )
+      ,TotalCnt(InsurerName,TotalRequests) AS
+      (SELECT DISTINCT
+      p.InsurerName
+      ,ISNULL(SUM(CASE WHEN PriorAuthTypeCode IN ('1', '4', '24', '16','12', '11', '2', '7','40')  AND sopf.ServiceOrderStatusKey=2
+      THEN sopf.ProcedureQty
+      ELSE 0
+      END), 0) AS TotalRequests
+      FROM dbo.programdim p
+      JOIN dbo.ServiceOrderProcedureFact sopf ON sopf.ProgramKey=p.ProgramKey
+      JOIN dbo.RationaleDim r ON sopf.RationaleKey=r.RationaleKey
+      JOIN dbo.ServiceOrderMedicalStatusDim som ON sopf.ServiceOrderMedicalStatusKey=som.ServiceOrderMedicalStatusKey
+      JOIN dbo.ProcedureDim up ON up.ProcedureKey=sopf.ProcedureKey
+      JOIN dbo.DateDim d ON d.DateKey=sopf.ServiceOrderDateKey
+      WHERE p.InsurerName = @InsurerName
+      AND CONVERT(VARCHAR(10),ServiceorderDateKey,110) between @startDate and @endDate
+      GROUP BY InsurerName
+      )
+      SELECT RationaleCode,RationaleLongDesc,initialDenials,CTE.InsurerName,TotalRequests
+      FROM CTE JOIN TotalCnt ON CTE.InsurerName = TotalCnt.InsurerName
+    </Approach>
+    <Steps>Step 1: Identify all the denial rationale codes and prior auth codes   Step 2: Extract the denial cases for the particuler Insurer for given time period.  Step 3: Calculate the denial ratio based on the total case count vs denial case count </Steps>
+    <Reference>193484</Reference>
+    <LastUpdate>13-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>Check the RationaleCode for denial case calculation.
+      Check the denial ratio calculation logic
+    </Review>
+    <Testing>Verify the report link.
+      verify the case denial count and total case creation counts.
+      verify the rationale codes and peror auth codes considered to calculate the denials
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>13</ModuleId>
+    <ModuleName>Service Order reports</ModuleName>
+    <TicketTypeID>3</TicketTypeID>
+    <TicketType>Review report</TicketType>
+    <Business>I need to request a daily SQL Report that shows how many cases were completed in each of the following activities:  Grier Accuracy Review, RN Initial Notification, RN Final Notification, and RN Grier Letter Review.  This can be on one report or multiple reports and can be organized by user or broken into separate items. </Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>SELECT DISTINCT
+      serviceorderID,
+      ad.ServiceOrderActivityDesc,
+      e.EmployeeFullName
+      FROM dbo.ServiceOrderFact sof JOIN
+      dbo.ServiceOrderActivityDim ad ON ad.ServiceOrderActivityKey=sof.serviceorderactivityKey
+      JOIN dbo.EmployeeDim e ON sof.EmployeeKey = e.EmployeeKey
+      WHERE ServiceOrderActivityDesc IN ('Grier Nurse Accuracy Review',
+      'RN Initial Notification',
+      'RN Final Notification',
+      'RN Grier Letter Review')
+      AND ad.ServiceOrderActivityStatusCode='COM'
+      AND  CONVERT(VARCHAR(10),ActualEndDateKey,112) between @StartDate AND @EndDate
+    </Approach>
+    <Steps>Step 1: Extract the case information for the given letter names.  Step 2: Include the employee information in the details to know who has done the review.  Step 3: Include the time frame condition to extract the data for the given time freme.</Steps>
+    <Reference>195628</Reference>
+    <LastUpdate>13-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>verify the given letter templates are considered or not.
+      verify the employee information is considered or not.
+    </Review>
+    <Testing>Test the report link is working or not.
+      Check the letter template names.
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>13</ModuleId>
+    <ModuleName>Service Order reports</ModuleName>
+    <TicketTypeID>4</TicketTypeID>
+    <TicketType>Insurer Denial Report</TicketType>
+    <Business>This report request is for Amerigroup WA only. Amerigroup WA must provided a denial report to the state quarterly. This is a report the client wants automated, delivered quarterly and posted to the web portal. Client wants first report for 4Q 2013 by 1/15/2014.</Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>WITH Main_CTE(HealthPlanName,
+      EnrolleeID,
+      EnrolleeLastName,
+      EnrolleeFirstName,
+      EnrolleeMiddleInitial,
+      EnrolleeFullName,
+      EnrolleeBirthdate,
+      PractitionerLastName,
+      PractitionerFirstName,
+      PractitionerMiddleInitial,
+      PractitionerSpecialty,
+      PractitionerNPI,
+      FacilityName,
+      TypeLevel,
+      Expedited,
+      AppealCategory,
+      AppealSubCategory,
+      AppealReason,
+      Resolution,
+      DateCaseRecieved,
+      DateCompleted,
+      serviceOrderID) AS
+      (SELECT DISTINCT HealthPlanName,
+      ISNULL(mif.IdentifierValue,'') AS EnrolleeID,
+      m.MemberLastName AS EnrolleeLastName,
+      m.MemberFirstName AS EnrolleeFirstName,
+      m.MemberMiddleName AS EnrolleeMiddleInitial,
+      m.MemberFullName AS EnrolleeFullName,
+      Convert(varchar(10),CAST(CONVERT(varchar(10), m.MemberBirthDateKey) AS datetime),101) AS EnrolleeBirthdate,
+      pd.PhysicianLastName AS PractitionerLastName,
+      pd.PhysicianFirstName AS PractitionerFirstName,
+      pd.PhysicianMiddleName AS PractitionerMiddleInitial,
+      pd.PhysicianPrimarySpecialtyDesc AS PractitionerSpecialty,
+      pn.PhysicianNPI AS PractitionerNPI,
+      fd.FacilityName,
+      '2' AS TypeLevel,
+      CASE WHEN sopf.ServiceOrderAcuityKey = 1 THEN 'X'
+      ELSE '' END AS Expedited,
+      'Diagnostics' AS AppealCategory,
+      'Radiology' AS AppealSubCategory,
+      'Medical Necessity' AS AppealReason,
+      rd.RationaleStatusDesc AS Resolution,
+      ISNULL(Convert(varchar(10),ISNULL(CAST(CONVERT(varchar(10), sopf.ServiceOrderDateKey) AS datetime),0),101),0) AS DateCaseRecieved,
+      ISNULL(Convert(varchar(10),CAST(CONVERT(varchar(10),NULLIF(sos.InitServiceOrderCloseDateKey,0))AS datetime),101),0) AS DateCompleted,
+      sopf.ServiceOrderID
+      FROM dbo.ServiceOrderProcedureFact sopf WITH (NOLOCK)
+      INNER JOIN dbo.ProgramDim prog WITH (NOLOCK)
+      ON sopf.ProgramKey = prog.ProgramKey
+      INNER JOIN dbo.MemberDim m WITH (NOLOCK)
+      ON sopf.MemberKey=m.MemberKey
+      INNER JOIN dbo.DateDim dd WITH (NOLOCK)
+      ON sopf.ServiceOrderDateKey=dd.DateKey
+      INNER JOIN dbo.MemberIdentifierFact mif WITH (NOLOCK)
+      ON m.MemberKey=mif.MemberKey
+      AND mif.IdentifierTypeKey=18
+      INNER JOIN dbo.PhysicianDim pd WITH (NOLOCK)
+      ON sopf.PhysicianKey=pd.PhysicianKey
+      INNER JOIN dbo.PhysicianNPI pn WITH (NOLOCK)
+      ON pd.PhysicianKey = pn.physiciankey
+      INNER JOIN dbo.FacilityDim fd WITH (NOLOCK)
+      ON sopf.FacilityKey=fd.FacilityKey
+      INNER JOIN dbo.RationaleDim rd WITH (NOLOCK)
+      ON sopf.RationaleKey=rd.RationaleKey
+      INNER JOIN dbo.ServiceOrderSummaryDim sos WITH (NOLOCK)
+      ON sopf.ServiceOrderID=sos.ServiceOrderID
+      INNER JOIN dbo.ServiceOrderFact sof WITH (NOLOCK)
+      ON sopf.ServiceOrderID=sof.ServiceOrderID
+      WHERE prog.HealthPlanName='AMERIGROUP-WA'
+      AND sopf.ProcedureStatusKey=2
+      AND sopf.ServiceOrderStatusKey=2
+      AND sopf.ServiceOrderMedicalStatusKey=2
+      AND dd.DateQuarterDesc='2013-Q4')
+      ,Note_CTE
+      (ServiceOrderID,
+      NotificationDate,
+      rownum
+      ) AS (
+      SELECT DISTINCT
+      nlf.ServiceOrderID,
+      DateUS NotificationDate,
+      ROW_NUMBER() OVER (PARTITION BY nlf.ServiceOrderID ORDER BY NotificationLetterDateKey) rownum
+      FROM
+      dbo.NotificationLetterFact nlf
+      JOIN dbo.NotificationStatusDim nsd
+      ON nlf.NotificationStatusKey = nsd.NotificationStatusKey AND nsd.NotificationStatusCode='Y'
+      JOIN Main_CTE ON nlf.ServiceOrderID=Main_CTE.ServiceOrderID AND REPLACE(Main_CTE.EnrolleeFullName,' ','')=REPLACE(nlf.NotificationRecipientName,' ','')
+      JOIN datedim d ON DateKey=nlf.NotificationLetterDateKey)
+      SELECT DISTINCT HealthPlanName,
+      EnrolleeID,
+      EnrolleeLastName,
+      EnrolleeFirstName,
+      EnrolleeBirthdate,
+      PractitionerLastName,
+      PractitionerFirstName,
+      PractitionerMiddleInitial,
+      PractitionerSpecialty,
+      PractitionerNPI,
+      FacilityName,
+      TypeLevel,
+      Expedited,
+      AppealCategory,
+      AppealSubCategory,
+      AppealReason,
+      Resolution,
+      DateCaseRecieved,
+      DateCompleted,
+      Main_CTE.ServiceOrderID AS MSICaseNumber,
+      Note_CTE.NotificationDate
+      FROM Main_CTE LEFT JOIN Note_CTE ON Main_CTE.ServiceOrderID=Note_CTE.ServiceOrderID AND rownum=1
+      ORDER BY Main_CTE.ServiceOrderID
+    </Approach>
+    <Steps>Step 1: Identify all the denial case for the given insurer.  Step 2: Consider all required columns to report  Step 3: Apply the required conditions to filter the data.</Steps>
+    <Reference>96010</Reference>
+    <LastUpdate>13-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>verify the filter conditions to make sure the query gets the right data.
+      verify the columns considered in the report.
+      Verify the all hard coded values in the report.
+    </Review>
+    <Testing>Verify the report link.
+      Verify the report result.
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>13</ModuleId>
+    <ModuleName>Service Order reports</ModuleName>
+    <TicketTypeID>5</TicketTypeID>
+    <TicketType>Service Order Letter report</TicketType>
+    <Business>Can you please pull a report using the data points below? We are trying to identify if we have a letter issue or if there just have not been any request with the data points. Thanks
+      12/3/13 through 1/29/14
+      Cigna Self Insured or GWHCIGNA Self Insured
+      ASO Non-Erisa
+      Jursid State
+      Case ID
+      Case Status
+      If possible pull by Letter Configuration Name (CIGNA INITIAL DENIAL SI) or by Letter Template (CIGNA INITIAL DENIAL SI 2012v3 10-16-2013)
+    </Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>SELECT DISTINCT   sopf.ServiceOrderID,
+      sosd.ServiceOrderStatusDesc,
+      CASE WHEN somad.ERISAIndicatorCode='Y'
+      THEN 'ERISA' ELSE 'NON-ERISA'
+      END  ERISAIndicator,
+      somad.JurisdictionState,
+      somad.ProductCode,
+      nld.NotificationLetterName
+      FROM dbo.ServiceOrderProcedureFact sopf
+      JOIN ServiceOrderMemberAttributeDim somad ON sopf.ServiceOrderID = somad.ServiceOrderID
+      JOIN dbo.ServiceOrderStatusDim sosd ON sopf.ServiceOrderStatusKey=sosd.ServiceOrderStatusKey
+      JOIN dbo.NotificationLetterFact nlf ON somad.ServiceOrderID = nlf.ServiceOrderID
+      JOIN dbo.NotificationLetterDim nld ON nld.NotificationLetterKey=nlf.NotificationLetterKey
+      JOIN BKP.ProgramDim p ON sopf.ProgramKey = p.ProgramKey
+      JOIN datedim d ON d.datekey=sopf.ServiceOrderDateKey
+      WHERE  sopf.FundTypeKey=6 AND
+      p.InsurerKey=3 AND
+      d.DateDate BETWEEN @StartDate AND @EndDate
+      ORDER BY sopf.ServiceOrderID
+    </Approach>
+    <Steps>Step 1: Identify all the cases which has notification letter.  Step 2: Consider the required columns to report.  Step 3: Include the required filter conditions to retrieve the required information.      </Steps>
+    <Reference>110379</Reference>
+    <LastUpdate>13-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>Check the condition used to retrieve the required data.
+      Check the columns considered in the query.
+    </Review>
+    <Testing>verify the report link.
+      Verify the report data.
+      Verify the columns in the report.
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>14</ModuleId>
+    <ModuleName>Service Order Appeal Reports</ModuleName>
+    <TicketTypeID>6</TicketTypeID>
+    <TicketType>Health plan Level  Appeal Case Report</TicketType>
+    <Business>I need a report to pull appeal cases from specified dates in the past. I need a drop down to select the insurance company I would like to search on. Then a fields to identify specific date ranges. The data I would like to receive is the  case number, Insurance Company, Program, and if possible the letter name that was attached after the Appeal service was selected. The report should not have a main header or merge fields to that we can sort data when it is exported. It should be located under the QA Folder.</Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>WITH Main_CTE(ServiceOrderID,InsurerName,ProgramName)
+      AS(SELECT
+      sosd.ServiceOrderID
+      ,prog.InsurerName
+      ,prog.ProgramName
+      FROM  MSIWView.dbo.ServiceOrderFact sof
+      JOIN MSIWView.dbo.ServiceOrderActivityDim soad
+      ON sof.ServiceOrderActivityKey = soad.ServiceOrderActivityKey
+      JOIN MSIWView.dbo.ServiceOrderSummaryDim sosd
+      ON sof.ServiceOrderID = sosd.ServiceOrderID
+      JOIN MSIWView.dbo.ProgramDim prog
+      ON sosd.ProgramKey = prog.ProgramKey
+      JOIN MSIWView.dbo.DateDim asd
+      ON sof.ActualEndDateKey = asd.DateKey
+      WHERE
+      soad.ServiceOrderActivityDesc LIKE '%APPEAL%'
+      AND soad.ServiceOrderActivityDesc NOT LIKE '%CLAIM%'
+      AND soad.ServiceOrderActivityDesc NOT LIKE '%NOTIF%'
+      AND soad.ServiceOrderActivityDesc NOT LIKE '%WRAP%'
+      AND soad.ServiceOrderActivityStatusCode = 'COM'
+      AND sosd.ServiceOrderStatusKey = 2
+      AND prog.InsurerKey=@InsurerKey
+      AND asd.DateDate Between @StartDate AND @EndDate
+      )
+      , Sub_CTE ( ServiceOrderID,
+      NotificationLetterName
+      )
+      AS ( SELECT DISTINCT nlf.ServiceOrderID,
+      let.NotificationLetterName
+      FROM dbo.NotificationLetterFact nlf
+      JOIN dbo.NotificationLetterDim let
+      ON nlf.NotificationLetterKey = let.NotificationLetterKey
+      JOIN dbo.NotificationStatusDim nsd ON nlf.NotificationStatusKey=nsd.NotificationStatusKey AND nsd.NotificationStatusShortDesc='Printed'
+      JOIN Main_CTE
+      ON Main_CTE.ServiceOrderID=nlf.ServiceOrderID
+      WHERE (let.NotificationLetterName LIKE '%APPEAL%REC%'
+      OR let.NotificationLetterName LIKE '%APPEAL%ACK%'
+      OR let.NotificationLetterName LIKE '%REC%APPEAL%'
+      OR let.NotificationLetterName LIKE '%ACK%APPEAL%'
+      OR let.NotificationLetterName LIKE '%APPEAL%APPR%'
+      OR let.NotificationLetterName LIKE '%APPEAL%DEN%'
+      OR let.NotificationLetterName LIKE '%APPR%APPEAL%'
+      OR let.NotificationLetterName LIKE '%DEN%APPEAL%'
+      OR let.NotificationLetterName LIKE '%APPEAL%OVERTURN%'
+      OR let.NotificationLetterName LIKE '%OVERTURN%APPEAL%'))
+      SELECT DISTINCT Main_CTE.ServiceOrderID,
+      Main_CTE.InsurerName,
+      Main_CTE.ProgramName,
+      Sub_CTE.NotificationLetterName
+      FROM Main_CTE LEFT JOIN Sub_CTE ON Main_CTE.ServiceOrderID = Sub_CTE.ServiceOrderID
+    </Approach>
+    <Steps>Step 1: Identify the Appeal cases for the given insurer.  Step 2: Include the filter condition to identify appeal case based on notification letters.  Step 3: Include required columns in the report query</Steps>
+    <Reference>105312</Reference>
+    <LastUpdate>13-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>Verify the conditions considered in the query.
+      Verify the columns and logics to derive the required columns.
+    </Review>
+    <Testing>verify the report link.
+      Verify the report data and columns.
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>15</ModuleId>
+    <ModuleName>Audit Report</ModuleName>
+    <TicketTypeID>7</TicketTypeID>
+    <TicketType>Insurer Initial denial audit report</TicketType>
+    <Business>Universe Reports needed for Aetna and Coventry annual audit
+      Reporting time frame 4/1/2013 to 3/31/2014
+      Include in universes the type of service, type of plan (FED, HMO, SI, FI)and plan state
+      1. Commercial for Aetna –Denials Only (urgent, non-urgent and retro)
+      2. Commercial for Coventry- Denials Only (urgent, non-urgent and retro)
+      3. Medicaid for Aetna- Denials Only (urgent, non-urgent and retro)
+      4. Medicaid for Coventry- Denials Only (urgent, non-urgent and retro)
+      Please separate into individual spreadsheets
+      Medicare ODAG Reporting time frame 4/1/2013 to 3/31/2014
+      1. Medicare ODAG for Aetna – is there a way to capture only the Expedited Organizational Determination Approvals and Denials on 1 spreadsheet
+      2. Medicare ODAG for Coventry – is there a way to capture only the Expedited Organizational Determination Approvals and Denials on 1 spreadsheet
+      3. Medicare ODAG for Aetna – Denials and Modified only
+      4. Medicare ODAG for Coventry- Denials and Modified only
+      Due date May 2, 2014
+    </Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>SELECT DISTINCT sosd.serviceorderid
+      ,sopf.ServiceOrderAuthID
+      ,md.MemberLastName
+      ,md.MemberFirstName
+      ,d.DateUS AS ServiceStartDate
+      ,dd.DateUS AS ServiceEndDate
+      ,pd.ProgramName
+      ,pd.InsurerName
+      ,egd.EmployerGroupName
+      ,pd.ProgramLocationCode
+      ,pcd.ProcedureCode
+      ,pcd.ProcedureDesc
+      ,sosd.UrgentFlag AS "ISExpeditedCase?"
+      ,sosd.RetroFlag AS "IsRetroCase?"
+      ,rd.PriorAuthTypeCode
+      FROM dbo.ServiceOrderSummaryDim sosd
+      JOIN serviceorderProcedurefact sopf ON sopf.serviceorderID=sosd.ServiceOrderID
+      LEFT JOIN memberDIM md ON md.memberkey=sosd.MemberKey
+      JOIN programDim pd ON sosd.ProgramKey = pd.ProgramKey
+      JOIN dbo.ProcedureDim pcd ON pcd.ProcedureKey=sopf.ProcedureKey
+      JOIN datedim d ON d.datekey=sosd.ServiceOrderDateKey
+      JOIN dbo.DateDim dd ON dd.DateKey=sosd.InitServiceOrderCloseDateKey
+      JOIN dbo.RationaleDim rd ON rd.RationaleKey=sopf.RationaleKey
+      JOIN dbo.EmployerGroupDim egd ON sopf.EmployerGroupKey = egd.EmployerGroupKey
+      WHERE sosd.InsurerKey in (1) --AND pd.ProgramSubCategoryName='Commercial'
+      AND sopf.ServiceOrderStatusKey=2
+      AND rd.PriorAuthTypeCode IN ('2','7','40')
+      AND d.datedate BETWEEN '04/01/2013' AND '03/31/2014'
+      ORDER BY sosd.ServiceOrderID --Aetna
+
+      SELECT DISTINCT sosd.serviceorderid
+      ,sopf.ServiceOrderAuthID
+      ,md.MemberLastName
+      ,md.MemberFirstName
+      ,d.DateUS AS ServiceStartDate
+      ,dd.DateUS AS ServiceEndDate
+      ,pd.ProgramName
+      ,pd.InsurerName
+      ,egd.EmployerGroupName
+      ,pd.ProgramLocationCode
+      ,pcd.ProcedureCode
+      ,pcd.ProcedureDesc
+      ,sosd.UrgentFlag AS "ISExpeditedCase?"
+      ,sosd.RetroFlag AS "IsRetroCase?"
+      ,rd.PriorAuthTypeCode
+      FROM dbo.ServiceOrderSummaryDim sosd
+      JOIN serviceorderProcedurefact sopf ON sopf.serviceorderID=sosd.ServiceOrderID
+      LEFT JOIN memberDIM md ON md.memberkey=sosd.MemberKey
+      JOIN programDim pd ON sosd.ProgramKey = pd.ProgramKey
+      JOIN dbo.ProcedureDim pcd ON pcd.ProcedureKey=sopf.ProcedureKey
+      JOIN datedim d ON d.datekey=sosd.ServiceOrderDateKey
+      JOIN dbo.DateDim dd ON dd.DateKey=sosd.InitServiceOrderCloseDateKey
+      JOIN dbo.RationaleDim rd ON rd.RationaleKey=sopf.RationaleKey
+      JOIN dbo.EmployerGroupDim egd ON sopf.EmployerGroupKey = egd.EmployerGroupKey
+      WHERE sosd.InsurerKey in (20,27,48,67,68,83) --AND pd.ProgramSubCategoryName='Commercial'
+      AND sopf.ServiceOrderStatusKey=2
+      AND rd.PriorAuthTypeCode IN ('2','7','40')
+      AND d.datedate BETWEEN '04/01/2013' AND '03/31/2014'
+      ORDER BY sosd.ServiceOrderID --Coventry
+    </Approach>
+    <Steps>Step 1: Include the required columns in the query  Step 2: Include the filter conditions to get only the denial cases.  Step 3: Extract the information for the Anual time period.</Steps>
+    <Reference>203896</Reference>
+    <LastUpdate>13-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>Verify the time freame in the query.
+      Verify the columns inclused in the query.
+      Verify the conditions included in the filter the denial cases.
+    </Review>
+    <Testing>Verify the columns included in the report.
+      Verify the time frame of the report.
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>16</ModuleId>
+    <ModuleName>FDX Reports</ModuleName>
+    <TicketTypeID>8</TicketTypeID>
+    <TicketType>Facility Network and Modality report</TicketType>
+    <Business>Need a report showing all active facilities that have a Network Health Plan WI network linked to it and has the DXHC (DXHC) service marked.
+      Output:
+      FAC ID
+      Name
+    </Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>In Progress</Approach>
+    <Steps>Step 1: In Progress</Steps>
+    <Reference>205955</Reference>
+    <LastUpdate>12-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>
+    </Review>
+    <Testing>
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>16</ModuleId>
+    <ModuleName>FDX Reports</ModuleName>
+    <TicketTypeID>9</TicketTypeID>
+    <TicketType>Facility Modality report </TicketType>
+    <Business>All active facilities in the states of:
+      IL, MO, KS, OK, FL, GA, IA, NE, VA, NV
+      Have the following services marked in FDX:
+      Gen XRT, Neutron Beam, IMRT, SRS, Brachytherapy, Proton Beam
+      Output:
+      Fac ID
+      Name
+      Address (include City, State, Zip)
+      Services from above list
+    </Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>In Progress</Approach>
+    <Steps>Step 1: In Progress</Steps>
+    <Reference>203401</Reference>
+    <LastUpdate>12-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>
+    </Review>
+    <Testing>
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>17</ModuleId>
+    <ModuleName>Claim Reports</ModuleName>
+    <TicketTypeID>10</TicketTypeID>
+    <TicketType>Cliam Denied Report</TicketType>
+    <Business>I need to have a report created  that meets the following criteria:
+      Time frame - weekly
+      Cigna Programs only
+      Providers must be MSI Par Providers
+      Provider must be freestanding (not hospital/ not IOP) IOP can be recognized by IOP in Fee Schedule ID
+      Procedure should be denied with edit 685
+      Also the report fields should include:
+      Claim id
+      Service Date
+      CPT
+      CPT Description
+      Network
+    </Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>In Progress</Approach>
+    <Steps>Step 1: In Progress</Steps>
+    <Reference>204034</Reference>
+    <LastUpdate>12-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>
+    </Review>
+    <Testing>
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>18</ModuleId>
+    <ModuleName>Load report</ModuleName>
+    <TicketTypeID>11</TicketTypeID>
+    <TicketType>Eligibility load report</TicketType>
+    <Business>Please create a report manager report that can be pulled at will and a subscription be set up weekly for HAPMI. This will aid the Eligibility team in identifying the correct program in which to load members as the HP cannot provide a crosswalk. We currently do this for other blue plans as well.
+      I have attached a segment of the BENE file where the columns needed are highlighted in yellow.
+      This report needs to pull from the mapped data at will.
+      We only need to capture members in all 'MSI Networks'
+      Please title the report 'HAP MI Programs'
+    </Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>In Progress</Approach>
+    <Steps>Step 1: In Progress</Steps>
+    <Reference>200537</Reference>
+    <LastUpdate>12-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>
+    </Review>
+    <Testing>
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>2</ProjectId>
+    <ProjectName>MSI - BI Reporting</ProjectName>
+    <ModuleId>19</ModuleId>
+    <ModuleName>Provider Reports</ModuleName>
+    <TicketTypeID>12</TicketTypeID>
+    <TicketType>Active Physicians by Insurer Report</TicketType>
+    <Business>We have a BCBSKC Physician data report that has been requested by this client. We need to be able to pull a report (weekly) on the active physician records loaded in our system with the HP proxy or default ID.  I did not locate a report in RM that will allow us to pull physician records using the proxy/default ID, is there any way that a report can be built for this purpose?
+      Please let me know if you have any questions on this request.
+    </Business>
+    <Analysis>In Progress</Analysis>
+    <Approach>In Progress</Approach>
+    <Steps>Step 1:  In Progress</Steps>
+    <Reference>84562</Reference>
+    <LastUpdate>12-05-2014</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>Gajendra</ProcessAuthor>
+    <Review>
+    </Review>
+    <Testing>
+    </Testing>
+    <Author>Gajendra</Author>
+    <SystemName>EMIDS1\\gajendrac</SystemName>
+  </row>
+  <row>
+    <ProjectId>3</ProjectId>
+    <ProjectName>UI Development</ProjectName>
+  </row>
+  <row>
+    <ProjectId>3</ProjectId>
+    <ProjectName>UI Development</ProjectName>
+    <ModuleId>20</ModuleId>
+    <ModuleName>UI Module</ModuleName>
+    <TicketTypeID>0</TicketTypeID>
+    <TicketType>--- Select Ticket Type ---</TicketType>
+    <Business>
+    </Business>
+    <Analysis>
+    </Analysis>
+    <Approach>
+    </Approach>
+    <Steps>
+    </Steps>
+    <Reference>
+    </Reference>
+    <LastUpdate>10/06/2017</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>CHAUHAN</ProcessAuthor>
+    <Review>
+    </Review>
+    <Testing>
+    </Testing>
+    <Author>CHAUHAN</Author>
+    <SystemName>Gajendra\CHAUHAN</SystemName>
+  </row>
+  <row>
+    <ProjectId>3</ProjectId>
+    <ProjectName>UI Development</ProjectName>
+    <ModuleId>20</ModuleId>
+    <ModuleName>UI Module</ModuleName>
+    <TicketTypeID>13</TicketTypeID>
+    <TicketType>UI Ticket Type</TicketType>
+    <Business>Business Type</Business>
+    <Analysis>Analysis Type</Analysis>
+    <Approach>Approach Type</Approach>
+    <Steps>Step 1:  Step1 - Need to write Test case    Step 2:  Step - 2 Write Query    Step 3:  Impact analysis</Steps>
+    <Reference>
+    </Reference>
+    <LastUpdate>10/06/2017</LastUpdate>
+    <DocumentReference>
+    </DocumentReference>
+    <ProcessAuthor>CHAUHAN</ProcessAuthor>
+    <Review>Review not completed</Review>
+    <Testing>Testing work in progress</Testing>
+    <Author>CHAUHAN</Author>
+    <SystemName>Gajendra\CHAUHAN</SystemName>
+  </row>
+</Datas>
